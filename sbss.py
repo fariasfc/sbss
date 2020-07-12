@@ -56,7 +56,7 @@ def sbss(x, y, n_splits, validation_rate_from_train=0.0, distance_name='euclidea
             # Usando (i) apenas os indices nao utilizados anteriormente e (ii) apenas da classe k.
             considered_idxs = (~used_indexes) & idx_k
             # Pega os n_splits exemplos de menor distancia entre si para fazer parte dos splits
-            sum_distances = distances[:, considered_idxs].sum(1)
+            sum_distances = np.nansum(distances[:, considered_idxs], axis=1)
             # Colocando np.inf para forcar a ida dos indices que nao fazem sentido ficar na ultima posicao do sort.
             sum_distances[~considered_idxs] = np.inf
             # Pega o sample pivo, que tem a menor distancia para todos os outros samples da mesma classe
@@ -68,7 +68,7 @@ def sbss(x, y, n_splits, validation_rate_from_train=0.0, distance_name='euclidea
 
             for split_idx in splits[1:]:
                 # Distancia entre todos os elementos e os samples escolhidos para compor os splits correntes
-                sum_distances = distances[:, nearby_samples].sum(1)
+                sum_distances = np.nansum(distances[:, nearby_samples], axis=1)
                 # Ignorando indices que ja foram usados ou que nao sao da classe k
                 sum_distances[~considered_idxs] = np.inf
                 # Ignorando o proprio pivo, ja que nao faz sentido comparar a distancia dele com ele mesmo
